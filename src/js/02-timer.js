@@ -23,7 +23,8 @@ const timer = {
     }
 
     const startTime = value;
-    
+    this.isActive = true;
+
     refs.timerID = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = currentTime - startTime;
@@ -70,7 +71,6 @@ function onTimerSetValue({ days, hours, minutes, seconds }) {
 
 function onStartTimer() {
   timer.start(refs.dateValue);
-  timer.isActive = true;
 }
 
 function onStopTimer() {
@@ -80,10 +80,12 @@ function onStopTimer() {
     refs.timerMins.textContent === '00' &&
     refs.timerSec.textContent === '01'
   ) {
+    timer.isActive = false;
     clearInterval(refs.timerID);
+      
     setTimeout(() => {
-     return refs.timerSec.textContent = '00';
-    }, 1000)
+      return (refs.timerSec.textContent = '00');
+    }, 1000);
   }
 }
 
@@ -92,7 +94,7 @@ function onDisableBtn() {
 }
 
 function addLeadingZero(value) {
-  return String(value).padStart('2', '0');
+  return String(value).padStart(2, '0');
 }
 
 function convertMs(ms) {
@@ -102,11 +104,8 @@ function convertMs(ms) {
   const day = hour * 24;
 
   const days = addLeadingZero(Math.floor(ms / day));
-
   const hours = addLeadingZero(Math.floor((ms % day) / hour));
-
   const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-
   const seconds = addLeadingZero(
     Math.floor((((ms % day) % hour) % minute) / second)
   );
