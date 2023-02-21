@@ -9,6 +9,7 @@ const refs = {
   timerMins: document.querySelector('[data-minutes]'),
   timerSec: document.querySelector('[data-seconds]'),
   dateValue: null,
+  timerID: null,
 };
 
 refs.startBtn.addEventListener('click', onStartTimer);
@@ -22,13 +23,14 @@ const timer = {
     }
 
     const startTime = value;
-
-    setInterval(() => {
+    
+    refs.timerID = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = currentTime - startTime;
       const time = convertMs(deltaTime);
 
       onTimerSetValue(time);
+      onStopTimer();
     }, 1000);
   },
 };
@@ -60,13 +62,29 @@ function onDateCheck(value) {
 function onTimerSetValue({ days, hours, minutes, seconds }) {
   refs.timerDays.textContent = addLeadingZero(`${days}`.replace('-', '') - 1);
   refs.timerHours.textContent = addLeadingZero(`${hours}`.replace('-', '') - 1);
-  refs.timerMins.textContent = addLeadingZero(`${minutes}`.replace('-', '') - 1);
+  refs.timerMins.textContent = addLeadingZero(
+    `${minutes}`.replace('-', '') - 1
+  );
   refs.timerSec.textContent = addLeadingZero(`${seconds}`.replace('-', ''));
 }
 
 function onStartTimer() {
   timer.start(refs.dateValue);
   timer.isActive = true;
+}
+
+function onStopTimer() {
+  if (
+    refs.timerDays.textContent === '00' &&
+    refs.timerHours.textContent === '00' &&
+    refs.timerMins.textContent === '00' &&
+    refs.timerSec.textContent === '01'
+  ) {
+    clearInterval(refs.timerID);
+    setTimeout(() => {
+     return refs.timerSec.textContent = '00';
+    }, 1000)
+  }
 }
 
 function onDisableBtn() {
