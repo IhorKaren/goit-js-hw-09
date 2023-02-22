@@ -17,6 +17,44 @@ img {
   max-width: 100%;
 }
 
+.btn-box {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+}
+
+.color-switcher-btn {
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px;
+  padding: 10px 20px;
+  transition: background-color 200ms ease;
+}
+
+.color-switcher-btn {
+  background-color: royalblue;
+}
+
+.color-switcher-btn:hover {
+  background-color: #222;
+}
+
+.color-switcher-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+
+
+/* Timer styles */
+
 .btn-timer {
   background-color: royalblue;
   border: none;
@@ -26,15 +64,16 @@ img {
   font-size: 16px;
   padding: 8px 16px;
   margin-left: 8px;
-  transition: all 0.2s ease;
+  transition: background-color 200ms ease;
 }
 
 .btn-timer:hover {
-  background-color: darkblue;
+  background-color: #222;
 }
 
 .btn-timer:disabled {
   background-color: gray;
+  cursor: not-allowed;
 }
 
 #datetime-picker {
@@ -46,7 +85,6 @@ img {
   width: 100%;
 }
 
-/* Timer styles */
 .timer {
   display: flex;
   justify-content: center;
