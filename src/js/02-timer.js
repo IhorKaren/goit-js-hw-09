@@ -60,6 +60,9 @@ function onDateCheck(value) {
     return;
   }
 
+  timer.isActive = false;
+  clearInterval(refs.timerID);
+  onTimerSetValue({ days: 00, hours: 00, minutes: 00, seconds: 00 });
   refs.startBtn.removeAttribute('disabled');
   return (refs.dateValue = value.getTime());
 }
