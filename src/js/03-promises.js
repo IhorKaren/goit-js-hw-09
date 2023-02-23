@@ -2,39 +2,30 @@ import Notiflix from 'notiflix';
 
 const refs = {
   form: document.querySelector('.form'),
-  delayEl: document.querySelector('[name="delay"]'),
-  stepEl: document.querySelector('[name="step"]'),
-  amountEl: document.querySelector('[name="amount"]'),
 };
-
-let timerId = null;
-let counter = 0;
 
 refs.form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
   e.preventDefault();
 
-  timerId = setInterval(() => {
-    if (counter === Number(refs.amountEl.value)) {
-      clearInterval(timerId);
-      counter = 0;
-      return;
-    }
+  const {
+    elements: { delay, step, amount },
+  } = e.currentTarget;
 
-    counter += 1;
+  let currentDelay = Number(delay.value);
 
-    let dynamicDelay =
-      Number(refs.delayEl.value) + (counter - 1) * refs.stepEl.value;
-
-    createPromise(counter, dynamicDelay)
+  for (let i = 1; i <= Number(amount.value); i += 1) {
+    createPromise(i, currentDelay)
       .then(({ position, delay }) => {
         Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
       })
       .catch(({ position, delay }) => {
         Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
       });
-  }, refs.stepEl.value);
+
+    currentDelay += Number(step.value);
+  }
 }
 
 function createPromise(position, delay) {

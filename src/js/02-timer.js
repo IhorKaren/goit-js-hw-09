@@ -67,13 +67,6 @@ function onDateCheck(value) {
   return (refs.dateValue = value.getTime());
 }
 
-function onTimerSetValue({ days, hours, minutes, seconds }) {
-  refs.timerDays.textContent = addLeadingZero(days);
-  refs.timerHours.textContent = addLeadingZero(hours);
-  refs.timerMins.textContent = addLeadingZero(minutes);
-  refs.timerSec.textContent = addLeadingZero(seconds);
-}
-
 function onStartTimer() {
   timer.start(refs.dateValue);
 }
@@ -83,6 +76,13 @@ function onStopTimer(time) {
     timer.isActive = false;
     clearInterval(refs.timerID);
   }
+}
+
+function onTimerSetValue({ days, hours, minutes, seconds }) {
+  refs.timerDays.textContent = addLeadingZero(days);
+  refs.timerHours.textContent = addLeadingZero(hours);
+  refs.timerMins.textContent = addLeadingZero(minutes);
+  refs.timerSec.textContent = addLeadingZero(seconds);
 }
 
 function onDisableBtn() {
