@@ -55,14 +55,14 @@ function onDateCheck(value) {
     Notiflix.Notify.failure('Please choose a date in the future');
     timer.isActive = false;
     clearInterval(refs.timerID);
-    onTimerSetValue({ days: 00, hours: 00, minutes: 00, seconds: 00 });
+    onTimerSetValue({ days: '00', hours: '00', minutes: '00', seconds: '00' });
     onDisableBtn();
     return;
   }
 
   timer.isActive = false;
   clearInterval(refs.timerID);
-  onTimerSetValue({ days: 00, hours: 00, minutes: 00, seconds: 00 });
+  onTimerSetValue({ days: '00', hours: '00', minutes: '00', seconds: '00' });
   refs.startBtn.removeAttribute('disabled');
   return (refs.dateValue = value.getTime());
 }
