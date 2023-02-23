@@ -2,7 +2,6 @@ import Notiflix from 'notiflix';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-
 const refs = {
   inputDate: document.querySelector('[id="datetime-picker"]'),
   startBtn: document.querySelector('[data-start]'),
@@ -29,11 +28,11 @@ const timer = {
 
     refs.timerID = setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = currentTime - startTime;
+      const deltaTime = Math.abs(currentTime - startTime);
       const time = convertMs(deltaTime);
 
       onTimerSetValue(time);
-      onStopTimer();
+      onStopTimer(deltaTime);
     }, 1000);
   },
 };
@@ -43,8 +42,8 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    onDateCheck(selectedDates[0]);
+  onClose([selectedDates]) {
+    onDateCheck(selectedDates);
   },
 };
 
@@ -54,6 +53,9 @@ onDisableBtn();
 function onDateCheck(value) {
   if (value.getTime() < Date.now()) {
     Notiflix.Notify.failure('Please choose a date in the future');
+    timer.isActive = false;
+    clearInterval(refs.timerID);
+    onTimerSetValue({ days: 00, hours: 00, minutes: 00, seconds: 00 });
     onDisableBtn();
     return;
   }
@@ -63,31 +65,20 @@ function onDateCheck(value) {
 }
 
 function onTimerSetValue({ days, hours, minutes, seconds }) {
-  refs.timerDays.textContent = addLeadingZero(`${days}`.replace('-', '') - 1);
-  refs.timerHours.textContent = addLeadingZero(`${hours}`.replace('-', '') - 1);
-  refs.timerMins.textContent = addLeadingZero(
-    `${minutes}`.replace('-', '') - 1
-  );
-  refs.timerSec.textContent = addLeadingZero(`${seconds}`.replace('-', ''));
+  refs.timerDays.textContent = addLeadingZero(days);
+  refs.timerHours.textContent = addLeadingZero(hours);
+  refs.timerMins.textContent = addLeadingZero(minutes);
+  refs.timerSec.textContent = addLeadingZero(seconds);
 }
 
 function onStartTimer() {
   timer.start(refs.dateValue);
 }
 
-function onStopTimer() {
-  if (
-    refs.timerDays.textContent === '00' &&
-    refs.timerHours.textContent === '00' &&
-    refs.timerMins.textContent === '00' &&
-    refs.timerSec.textContent === '01'
-  ) {
+function onStopTimer(time) {
+  if (time < 1000) {
     timer.isActive = false;
     clearInterval(refs.timerID);
-      
-    setTimeout(() => {
-      return (refs.timerSec.textContent = '00');
-    }, 1000);
   }
 }
 
@@ -105,12 +96,9 @@ function convertMs(ms) {
   const hour = minute * 60;
   const day = hour * 24;
 
-  const days = addLeadingZero(Math.floor(ms / day));
-  const hours = addLeadingZero(Math.floor((ms % day) / hour));
-  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  const seconds = addLeadingZero(
-    Math.floor((((ms % day) % hour) % minute) / second)
-  );
-
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
   return { days, hours, minutes, seconds };
 }
