@@ -9,9 +9,10 @@ const refs = {
   timerHours: document.querySelector('[data-hours]'),
   timerMins: document.querySelector('[data-minutes]'),
   timerSec: document.querySelector('[data-seconds]'),
-  dateValue: null,
-  timerID: null,
 };
+
+let dateValue = null;
+let timerID = null;
 
 refs.startBtn.addEventListener('click', onStartTimer);
 
@@ -26,7 +27,7 @@ const timer = {
     const startTime = value;
     this.isActive = true;
 
-    refs.timerID = setInterval(() => {
+    timerID = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = Math.abs(currentTime - startTime);
       const time = convertMs(deltaTime);
@@ -54,27 +55,27 @@ function onDateCheck(value) {
   if (value.getTime() < Date.now()) {
     Notiflix.Notify.failure('Please choose a date in the future');
     timer.isActive = false;
-    clearInterval(refs.timerID);
+    clearInterval(timerID);
     onTimerSetValue({ days: '00', hours: '00', minutes: '00', seconds: '00' });
     onDisableBtn();
     return;
   }
 
   timer.isActive = false;
-  clearInterval(refs.timerID);
+  clearInterval(timerID);
   onTimerSetValue({ days: '00', hours: '00', minutes: '00', seconds: '00' });
   refs.startBtn.removeAttribute('disabled');
-  return (refs.dateValue = value.getTime());
+  return (dateValue = value.getTime());
 }
 
 function onStartTimer() {
-  timer.start(refs.dateValue);
+  timer.start(dateValue);
 }
 
 function onStopTimer(time) {
   if (time < 1000) {
     timer.isActive = false;
-    clearInterval(refs.timerID);
+    clearInterval(timerID);
   }
 }
 
